@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       # api test action
       resources :hello, only:[:index]
+      post '/callback' => 'message#callback'
     end
   end
 end
