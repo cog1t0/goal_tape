@@ -5,7 +5,7 @@ class Api::V1::MessageController < ActionController::Base
   
   def callback
     body = request.body.read
-    
+
     signature = request.env['HTTP_X_LINE_SIGNATURE']
     unless client.validate_signature(body, signature)
       error 400 do 'Bad Request' end
@@ -17,9 +17,29 @@ class Api::V1::MessageController < ActionController::Base
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
+          # message = {
+          #   type: 'text',
+          #   text: event.message['text']
+          # }
           message = {
-            type: 'text',
-            text: event.message['text']
+            "type": "template",
+            "altText": "あなたの性別を教えてください",
+            "template": {
+                "type": "confirm",
+                "text": "あなたの性別を教えてください",
+                "actions": [
+                    {
+                      "type": "message",
+                      "label": "男性",
+                      "text": "male"
+                    },
+                    {
+                      "type": "message",
+                      "label": "女性",
+                      "text": "female"
+                    }
+                ]
+            }
           }
           client.reply_message(event['replyToken'], message)
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
