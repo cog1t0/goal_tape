@@ -1,4 +1,4 @@
-class Api::V1::MessageController < ApplicationController
+class Api::V1::MessageController < ActionController::Base
   include LineBotSetting
   # callbackアクションのCSRFトークン認証を無効
   protect_from_forgery :except => [:callback]
